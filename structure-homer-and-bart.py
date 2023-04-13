@@ -21,44 +21,32 @@ classifier.add(Dense(units = 1, activation = 'sigmoid'))
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy',
                metrics = ['accuracy'])
 
-generator_training = ImageDataGenerator(rescale = 1./255,
-                                        rotation_range = 7,
-                                        horizontal_flip = True,
-                                        shear_range = 0.2,
-                                        height_shift_range = 0.07,
-                                        zoom_range = 0.2)
+generator_training = ImageDataGenerator(rescale = 1./255, rotation_range = 7,
+                                        horizontal_flip = True, shear_range = 0.2,
+                                        height_shift_range = 0.07, zoom_range = 0.2)
 
 generator_test= ImageDataGenerator(rescale = 1./255)
 
-base_training = generator_training.flow_from_directory('dataset/training_set', 
+base_training = generator_training.flow_from_directory('dataset_characters/training_set', 
                                                        target_size = (64, 64),
-                                                       batch_size = 32,
+                                                       batch_size = 10,
                                                        class_mode = 'binary')
 
-base_test = generator_test.flow_from_directory('dataset/test_set', 
+base_test = generator_test.flow_from_directory('dataset_characters/test_set', 
                                                        target_size = (64, 64),
-                                                       batch_size = 32,
+                                                       batch_size = 10,
                                                        class_mode = 'binary')
 
-classifier.fit_generator(base_training, steps_per_epoch = 4000 / 32,
-                         epochs = 10, validation_data = base_test,
-                         validation_steps = 1000 / 32)
+classifier.fit_generator(base_training, steps_per_epoch = 196 / 1,
+                         epochs = 100, validation_data = base_test,
+                         validation_steps = 73 / 1)
 
 # base_training.class_indices
-# cat
-image_test_cat = image.load_img('dataset/test_set/gato/cat.3500.jpg',
-                        target_size = (64,64))
-image_test_cat = image.img_to_array(image_test_cat)
-image_test_cat
-image_test_cat /= 255
-image_test_cat = np.expand_dims(image_test_cat, axis = 0)
-prediction_test = classifier.predict(image_test_cat)
-
-# dog
-image_test_dog = image.load_img('dataset/test_set/cachorro/dog.3500.jpg',
-                        target_size = (64,64))
-image_test_dog = image.img_to_array(image_test_dog)
-image_test_dog
-image_test_dog /= 255
-image_test_dog = np.expand_dims(image_test_dog, axis = 0)
-prediction_test = classifier.predict(image_test_dog)
+base_training.class_indices
+#image_test = image.load_img('dataset_characters/test_set/homer/homer1.bmp',  target_size = (64,64))
+image_test = image.load_img('dataset_characters/test_set/bart/bart4.bmp',  target_size = (64,64))
+image_test = image.img_to_array(image_test)
+image_test
+image_test /= 255
+image_test = np.expand_dims(image_test, axis = 0)
+prediction_test = classifier.predict(image_test)
